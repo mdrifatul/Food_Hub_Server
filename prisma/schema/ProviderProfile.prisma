@@ -1,0 +1,14 @@
+model ProviderProfile {
+  id String @id @default(uuid())
+  authorId String
+  
+  businessName String
+  businessAddress String
+  businessPhone String
+  description String?
+    
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("provider_profiles")
+}

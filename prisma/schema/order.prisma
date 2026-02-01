@@ -1,0 +1,46 @@
+model Order {
+  id String @id @default(uuid())
+
+  authorId  String
+  status OrderStatus @default(PENDING)
+  paymentMethod PaymentMethod @default(COD)
+  deliveryAddress String
+
+  totalPrice Int
+
+  // Relations
+  items OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([authorId])
+  @@map("orders")
+}
+
+model OrderItem {
+  id String @id @default(uuid())
+  orderId String
+  order  Order @relation(fields: [orderId], references: [id])
+  mealId String
+  meal   Meal @relation(fields: [mealId], references: [id])
+  quantity Int?
+  price    Int
+
+  @@index([orderId])
+  @@index([mealId])
+  @@map("order_items")
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PREPARING
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentMethod{
+  COD
+}
