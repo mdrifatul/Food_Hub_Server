@@ -14,21 +14,21 @@ const createProviderProfile = async (
   }
 };
 
-// const getProviderById = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction,
-// ) => {
-//   try {
-//     const { id } = req.params;
-//     const result = await providerService.getProvierById(id as string);
-//     res.status(200).json(result);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+const getProviderById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { id } = req.params;
+    const result = await providerService.getProvierById(id as string);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const providerController = {
   createProviderProfile,
-  // getProviderById,
+  getProviderById,
 };

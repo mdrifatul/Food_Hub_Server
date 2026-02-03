@@ -11,14 +11,14 @@ const createProviderProfile = async (data: {
   return newProvider;
 };
 
-// const getProvierById = async (id: string) => {
-//   const provider = await prisma.providerProfile.findUnique({
-//     where: { id },
-//   });
-//   return provider;
-// };
+const getProvierById = async (id: string) => {
+  const provider = await prisma.providerProfile.findUnique({
+    where: { id },
+  });
+  return provider;
+};
 
 export const providerService = {
   createProviderProfile,
-  // getProvierById,
+  getProvierById,
 };
