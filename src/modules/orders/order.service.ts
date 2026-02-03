@@ -70,79 +70,79 @@ const createOrder = async ({
   return order;
 };
 
-const getUserOrders = async (authorId: string) => {
-  const orders = await prisma.order.findMany({
-    where: { authorId },
-    include: {
-      items: {
-        include: {
-          meal: {
-            select: {
-              title: true,
-              imageUrl: true,
-              cuisine: true,
-            },
-          },
-        },
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-  return orders;
-};
+// const getUserOrders = async (authorId: string) => {
+//   const orders = await prisma.order.findMany({
+//     where: { authorId },
+//     include: {
+//       items: {
+//         include: {
+//           meal: {
+//             select: {
+//               title: true,
+//               imageUrl: true,
+//               cuisine: true,
+//             },
+//           },
+//         },
+//       },
+//     },
+//     orderBy: {
+//       createdAt: "desc",
+//     },
+//   });
+//   return orders;
+// };
 
-const getOrderById = async (orderId: string, authorId: string) => {
-  const order = await prisma.order.findFirst({
-    where: {
-      id: orderId,
-      authorId,
-    },
-    include: {
-      items: {
-        include: {
-          meal: {
-            select: {
-              authorId: true,
-              title: true,
-              imageUrl: true,
-              cuisine: true,
-            },
-          },
-        },
-      },
-    },
-  });
+// const getOrderById = async (orderId: string, authorId: string) => {
+//   const order = await prisma.order.findFirst({
+//     where: {
+//       id: orderId,
+//       authorId,
+//     },
+//     include: {
+//       items: {
+//         include: {
+//           meal: {
+//             select: {
+//               authorId: true,
+//               title: true,
+//               imageUrl: true,
+//               cuisine: true,
+//             },
+//           },
+//         },
+//       },
+//     },
+//   });
 
-  return order;
-};
+//   return order;
+// };
 
-const updateOrderStatus = async (orderId: string, status: OrderStatus) => {
-  await prisma.order.findUniqueOrThrow({
-    where: { id: orderId },
-    include: {
-      items: {
-        include: {
-          meal: {
-            select: {
-              authorId: true,
-            },
-          },
-        },
-      },
-    },
-  });
-  const order = await prisma.order.update({
-    where: { id: orderId },
-    data: { status },
-  });
-  return order;
-};
+// const updateOrderStatus = async (orderId: string, status: OrderStatus) => {
+//   await prisma.order.findUniqueOrThrow({
+//     where: { id: orderId },
+//     include: {
+//       items: {
+//         include: {
+//           meal: {
+//             select: {
+//               authorId: true,
+//             },
+//           },
+//         },
+//       },
+//     },
+//   });
+//   const order = await prisma.order.update({
+//     where: { id: orderId },
+//     data: { status },
+//   });
+//   return order;
+// };
 
 export const OrderService = {
   createOrder,
-  getUserOrders,
-  getOrderById,
-  updateOrderStatus,
+  // getUserOrders,
+  // getOrderById,
+  // updateOrderStatus,
 };
