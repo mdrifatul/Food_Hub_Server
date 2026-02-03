@@ -78,25 +78,25 @@ const getMyMeal = async (authorId: string) => {
   return result;
 };
 
-// const updateMeal = async (
-//   mealId: string,
-//   data: Partial<Meal>,
-//   authorId: string,
-//   isProvider: boolean,
-// ) => {
-//   const existingMeal = await prisma.meal.findUniqueOrThrow({
-//     where: { id: mealId },
-//     select: { id: true, authorId: true },
-//   });
-//   if (isProvider && existingMeal.authorId !== authorId) {
-//     throw new Error("You are not authorized to update this meal");
-//   }
-//   const result = await prisma.meal.update({
-//     where: { id: mealId },
-//     data,
-//   });
-//   return result;
-// };
+const updateMeal = async (
+  mealId: string,
+  data: Partial<Meal>,
+  authorId: string,
+  isProvider: boolean,
+) => {
+  const existingMeal = await prisma.meal.findUniqueOrThrow({
+    where: { id: mealId },
+    select: { id: true, authorId: true },
+  });
+  if (isProvider && existingMeal.authorId !== authorId) {
+    throw new Error("You are not authorized to update this meal");
+  }
+  const result = await prisma.meal.update({
+    where: { id: mealId },
+    data,
+  });
+  return result;
+};
 
 // const deleteMeal = async (
 //   mealId: string,
@@ -121,6 +121,6 @@ export const mealService = {
   getAllMeal,
   getMealById,
   getMyMeal,
-  // updateMeal,
+  updateMeal,
   // deleteMeal,
 };

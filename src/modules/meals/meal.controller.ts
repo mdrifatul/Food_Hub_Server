@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { UserRole } from "../../../generated/client/enums";
 import { mealService } from "./meal.service";
 
 const createMeal = async (req: Request, res: Response, next: NextFunction) => {
@@ -62,26 +63,26 @@ const getMyMeal = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-// const updateMeal = async (req: Request, res: Response, next: NextFunction) => {
-//   try {
-//     if (!req.user) {
-//       return res.status(400).json({
-//         error: "You are Unauthorize!",
-//       });
-//     }
-//     const { id } = req.params;
-//     const isProvider = UserRole.PROVIDER === req.user.role;
-//     const result = await mealService.updateMeal(
-//       id as string,
-//       req.body,
-//       req.user.id,
-//       isProvider,
-//     );
-//     res.status(200).json(result);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+const updateMeal = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.user) {
+      return res.status(400).json({
+        error: "You are Unauthorize!",
+      });
+    }
+    const { id } = req.params;
+    const isProvider = UserRole.PROVIDER === req.user.role;
+    const result = await mealService.updateMeal(
+      id as string,
+      req.body,
+      req.user.id,
+      isProvider,
+    );
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 
 // const deleteMeal = async (req: Request, res: Response, next: NextFunction) => {
 //   try {
@@ -108,6 +109,6 @@ export const mealController = {
   getAllMeal,
   getMealById,
   getMyMeal,
-  // updateMeal,
+  updateMeal,
   // deleteMeal,
 };
