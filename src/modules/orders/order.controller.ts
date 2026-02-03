@@ -70,36 +70,36 @@ const getOrderById = async (
   }
 };
 
-// const updateOrderStatus = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction,
-// ) => {
-//   try {
-//     if (!req.user) {
-//       return res.status(401).json({
-//         success: false,
-//         message: "Unauthorized",
-//       });
-//     }
+const updateOrderStatus = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
 
-//     const { id } = req.params;
-//     const { status } = req.body;
+    const { id } = req.params;
+    const { status } = req.body;
 
-//     const result = await OrderService.updateOrderStatus(id as string, status);
+    const result = await OrderService.updateOrderStatus(id as string, status);
 
-//     res.status(200).json({
-//       success: true,
-//       data: result,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+    res.status(200).json({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const orderController = {
   createOrder,
   getUserOrders,
   getOrderById,
-  // updateOrderStatus,
+  updateOrderStatus,
 };

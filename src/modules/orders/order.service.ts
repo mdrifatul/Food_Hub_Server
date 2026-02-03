@@ -118,31 +118,31 @@ const getOrderById = async (orderId: string, authorId: string) => {
   return order;
 };
 
-// const updateOrderStatus = async (orderId: string, status: OrderStatus) => {
-//   await prisma.order.findUniqueOrThrow({
-//     where: { id: orderId },
-//     include: {
-//       items: {
-//         include: {
-//           meal: {
-//             select: {
-//               authorId: true,
-//             },
-//           },
-//         },
-//       },
-//     },
-//   });
-//   const order = await prisma.order.update({
-//     where: { id: orderId },
-//     data: { status },
-//   });
-//   return order;
-// };
+const updateOrderStatus = async (orderId: string, status: OrderStatus) => {
+  await prisma.order.findUniqueOrThrow({
+    where: { id: orderId },
+    include: {
+      items: {
+        include: {
+          meal: {
+            select: {
+              authorId: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  const order = await prisma.order.update({
+    where: { id: orderId },
+    data: { status },
+  });
+  return order;
+};
 
 export const OrderService = {
   createOrder,
   getUserOrders,
   getOrderById,
-  // updateOrderStatus,
+  updateOrderStatus,
 };
