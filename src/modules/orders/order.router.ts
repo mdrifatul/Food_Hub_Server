@@ -6,7 +6,11 @@ import { orderController } from "./order.controller";
 const router = Router();
 
 router.post("/", auth(UserRole.USER), orderController.createOrder);
-router.get("/", auth(UserRole.ADMIN), orderController.getUserOrders);
+router.get(
+  "/",
+  auth(UserRole.ADMIN, UserRole.PROVIDER, UserRole.USER),
+  orderController.getUserOrders,
+);
 router.get("/:id", auth(UserRole.USER), orderController.getOrderById);
 router.patch(
   "/:id",

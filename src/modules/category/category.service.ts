@@ -26,8 +26,24 @@ const getAllCategories = async () => {
 
   return categories;
 };
+const deleteCategory = async (id: string) => {
+
+  const category = await prisma.category.findUnique({
+    where: { id },
+  });
+
+  if (!category) {
+    throw new Error("Category not found");
+  }
+  const result = await prisma.category.delete({
+    where: { id },
+  });
+
+  return result;
+};
 
 export const categoryService = {
   createCategory,
   getAllCategories,
+  deleteCategory,
 };
