@@ -5,14 +5,17 @@ const getUser = async () => {
   return result;
 };
 
-const updateUser = async (userId: string, status: string) => {
+const updateUser = async (userId: string, status?: string,role?:string) => {
   await prisma.user.findUnique({
     where: { id: userId },
   });
 
   const result = await prisma.user.update({
     where: { id: userId },
-    data: { status },
+    data: {
+      ...(status !== undefined && { status }),
+      ...(role !== undefined && { role }),
+    },
     select: {
       id: true,
       email: true,
