@@ -11,7 +11,11 @@ router.get(
   auth(UserRole.ADMIN, UserRole.PROVIDER, UserRole.USER),
   orderController.getUserOrders,
 );
-router.get("/:id", auth(UserRole.USER), orderController.getOrderById);
+router.get(
+  "/:id",
+  auth(UserRole.USER, UserRole.PROVIDER, UserRole.ADMIN),
+  orderController.getOrderById,
+);
 router.patch(
   "/:id",
   auth(UserRole.PROVIDER),
