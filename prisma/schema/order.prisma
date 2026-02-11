@@ -2,6 +2,7 @@ model Order {
   id String @id @default(uuid())
 
   authorId  String
+  providerId String
   status OrderStatus @default(PENDING)
   paymentMethod PaymentMethod @default(COD)
   deliveryAddress String

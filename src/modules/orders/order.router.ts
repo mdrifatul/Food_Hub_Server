@@ -9,6 +9,11 @@ router.post("/", auth(UserRole.USER), orderController.createOrder);
 router.get(
   "/",
   auth(UserRole.ADMIN, UserRole.PROVIDER, UserRole.USER),
+  orderController.getAllOrders,
+);
+router.get(
+  "/myorder",
+  auth(UserRole.ADMIN, UserRole.PROVIDER, UserRole.USER),
   orderController.getUserOrders,
 );
 router.get(

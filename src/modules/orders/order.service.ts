@@ -13,7 +13,7 @@ const createOrder = async ({
   items: {
     mealId: string;
     quantity: number;
-    authorId:string
+    authorId: string;
   }[];
 }) => {
   const mealIds = items.map((item) => item.mealId);
@@ -26,11 +26,15 @@ const createOrder = async ({
   });
 
   let totalPrice = 0;
+  let providerId = "";
   const orderItemsData = items.map((item) => {
     const meal = meals.find((m) => m.id === item.mealId);
     if (!meal) {
       throw new Error(`Meal ID ${item.mealId} is not available`);
     }
+
+    providerId = meal.authorId;
+
     const itemTotal = meal.price * item.quantity;
     totalPrice += itemTotal;
 
@@ -38,13 +42,13 @@ const createOrder = async ({
       mealId: item.mealId,
       quantity: item.quantity,
       price: meal.price,
-      providerId:item.authorId
     };
   });
 
   const order = await prisma.order.create({
     data: {
       authorId,
+      providerId,
       deliveryAddress,
       ...(paymentMethod && { paymentMethod }),
       totalPrice,
@@ -70,6 +74,29 @@ const createOrder = async ({
   });
 
   return order;
+};
+
+const getAllOrders = async () => {
+  const orders = await prisma.order.findMany({
+    include: {
+      items: {
+        include: {
+          meal: {
+            select: {
+              authorId: true,
+              title: true,
+              imageUrl: true,
+              cuisine: true,
+            },
+          },
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return orders;
 };
 
 const getUserOrders = async (authorId: string) => {
@@ -147,4 +174,5 @@ export const OrderService = {
   getUserOrders,
   getOrderById,
   updateOrderStatus,
+  getAllOrders,
 };
