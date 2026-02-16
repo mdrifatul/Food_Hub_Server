@@ -35,11 +35,10 @@ model OrderItem {
 
 enum OrderStatus {
   PENDING
-  CONFIRMED
   PREPARING
-  OUT_FOR_DELIVERY
+  READY
   DELIVERED
-  CANCELLED
+
 }
 
 enum PaymentMethod{

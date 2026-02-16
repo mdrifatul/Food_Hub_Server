@@ -46,7 +46,7 @@ const getUserOrders = async (
         .json({ message: "Please login for get your orders" });
     }
 
-    const result = await OrderService.getUserOrders(req.user.id);
+    const result = await OrderService.getUserOrders(req.user.id, req.user.id);
 
     res.status(200).json({
       success: true,
