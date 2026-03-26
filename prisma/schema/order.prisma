@@ -8,9 +8,14 @@ model Order {
   deliveryAddress String
 
   totalPrice Int
+  
+  // Payment related fields
+  paymentStatus OrderPaymentStatus @default(UNPAID)
+  transactionId String?
 
   // Relations
   items OrderItem[]
+  payment Payment?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -43,4 +48,10 @@ enum OrderStatus {
 
 enum PaymentMethod{
   COD
+  STRIPE
+}
+
+enum OrderPaymentStatus {
+  PAID
+  UNPAID
 }

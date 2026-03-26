@@ -8,6 +8,7 @@
     "dev": "npx tsx watch src/server.ts",
     "seed:admin": "npx tsx src/scripts/seedAdmin.ts",
     "build": "prisma generate && tsup src/app.ts --format esm --platform node --target node20 --outDir api --external pg-native",
+    "stripe:webhook": "stripe listen --forward-to localhost:5000/webhook",
     "postinstall": "prisma generate"
   },
   "keywords": [],
@@ -25,6 +26,7 @@
     "nodemailer": "^7.0.13",
     "pg": "^8.17.2",
     "slugify": "^1.6.6",
+    "stripe": "^21.0.0",
     "typescript": "^5.9.3"
   },
   "devDependencies": {

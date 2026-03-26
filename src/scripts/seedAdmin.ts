@@ -19,7 +19,7 @@ async function seedAdmin() {
     }
 
     const adminSignUp = await fetch(
-      "https://foodhub-server-gilt.vercel.app/api/auth/sign-up/email",
+      `https://foodhub-server-gilt.vercel.app/api/auth/sign-up/email`,
       {
         method: "POST",
         headers: {

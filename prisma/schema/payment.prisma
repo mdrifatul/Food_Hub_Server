@@ -1,0 +1,21 @@
+model Payment {
+  id String @id @default(uuid())
+  orderId String @unique
+  order Order @relation(fields: [orderId], references: [id])
+  
+  amount Int
+  status PaymentStatus @default(UNPAID)
+  transactionId String?
+  paymentGatewayData Json?
+  stripeEventId String? @unique
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("payments")
+}
+
+enum PaymentStatus {
+  PAID
+  UNPAID
+}
