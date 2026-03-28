@@ -26,6 +26,9 @@ importers:
       express:
         specifier: ^5.2.1
         version: 5.2.1
+      foodhub:
+        specifier: 'link:'
+        version: 'link:'
       nodemailer:
         specifier: ^7.0.13
         version: 7.0.13

@@ -5,9 +5,10 @@ import { PaymentController } from "./payment.controller";
 
 const router = Router();
 
+// Create Stripe Checkout Session for an order
 router.post(
-  "/create-checkout-session",
-  auth(UserRole.USER, UserRole.ADMIN, UserRole.PROVIDER),
+  "/checkout",
+  auth(UserRole.USER),
   PaymentController.createCheckoutSession,
 );
 

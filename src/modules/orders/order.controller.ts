@@ -82,6 +82,34 @@ const getOrderById = async (
   }
 };
 
+const getPaymentByOrderId = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    const orderId = req.params.orderId as string;
+    const payment = await OrderService.getPaymentByOrderId(orderId);
+
+    if (!payment) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Payment not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: payment,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const updateOrderStatus = async (
   req: Request,
   res: Response,
@@ -113,6 +141,7 @@ export const orderController = {
   createOrder,
   getUserOrders,
   getOrderById,
+  getPaymentByOrderId,
   updateOrderStatus,
   getAllOrders,
 };

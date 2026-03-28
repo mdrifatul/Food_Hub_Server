@@ -1,43 +1,45 @@
-import { Request, Response } from "express";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { NextFunction, Request, Response } from "express";
 import { stripe } from "../../config/stripe.config";
 import { PaymentService } from "./payment.service";
 
-const createCheckoutSession = async (req: Request, res: Response) => {
+// POST /api/payments/checkout — Create a Stripe Checkout Session for an order
+const createCheckoutSession = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
-    const { orderId } = req.body;
-    if (!orderId) {
-      return res.status(400).json({
-        success: false,
-        message: "orderId is required",
-      });
-    }
-
     if (!req.user) {
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorized",
-      });
+      return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
-    const result = await PaymentService.createCheckoutSession(
-      orderId,
-      req.user.email,
-    );
+    const { orderId } = req.body;
+
+    if (!orderId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "orderId is required" });
+    }
+
+    const result = await PaymentService.createCheckoutSession(orderId);
 
     res.status(200).json({
       success: true,
-      message: "Checkout session created successfully",
+      message: "Checkout session created",
       data: result,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message || "Failed to create checkout session",
-    });
+  } catch (error) {
+    next(error);
   }
 };
 
-const handleStripeWebhookEvent = async (req: Request, res: Response) => {
+// POST /webhook — Handle Stripe webhook events (raw body required)
+const handleStripeWebhookEvent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const signature = req.headers["stripe-signature"] as string;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -53,23 +55,18 @@ const handleStripeWebhookEvent = async (req: Request, res: Response) => {
   try {
     event = stripe.webhooks.constructEvent(req.body, signature, webhookSecret);
   } catch (error: any) {
-    console.error("Error processing Stripe webhook:", error);
-    return res.status(400).json({ message: `Webhook Error: ${error.message}` });
+    console.error("Webhook signature verification failed:", error.message);
+    return res
+      .status(400)
+      .json({ message: "Webhook signature verification failed" });
   }
 
   try {
     const result = await PaymentService.handlerStripeWebhookEvent(event);
-    res.status(200).json({
-      success: true,
-      message: "Stripe webhook event processed successfully",
-      data: result,
-    });
-  } catch (error: any) {
+    res.status(200).json(result);
+  } catch (error) {
     console.error("Error handling Stripe webhook event:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error handling Stripe webhook event",
-    });
+    next(error);
   }
 };
 

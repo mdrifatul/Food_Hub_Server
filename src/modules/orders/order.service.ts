@@ -152,6 +152,25 @@ const getOrderById = async (orderId: string, authorId: string) => {
   return order;
 };
 
+const getPaymentByOrderId = async (orderId: string) => {
+  const payment = await prisma.payment.findUnique({
+    where: { orderId },
+    include: {
+      order: {
+        select: {
+          id: true,
+          status: true,
+          totalPrice: true,
+          paymentStatus: true,
+          paymentMethod: true,
+        },
+      },
+    },
+  });
+
+  return payment;
+};
+
 const updateOrderStatus = async (orderId: string, status: OrderStatus) => {
   await prisma.order.findUniqueOrThrow({
     where: { id: orderId },
@@ -167,6 +186,7 @@ export const OrderService = {
   createOrder,
   getUserOrders,
   getOrderById,
+  getPaymentByOrderId,
   updateOrderStatus,
   getAllOrders,
 };

@@ -16,6 +16,13 @@ router.get(
   auth(UserRole.ADMIN, UserRole.PROVIDER, UserRole.USER),
   orderController.getUserOrders,
 );
+
+router.get(
+  "/:orderId",
+  auth(UserRole.USER, UserRole.ADMIN),
+  orderController.getPaymentByOrderId,
+);
+
 router.get(
   "/:id",
   auth(UserRole.USER, UserRole.PROVIDER, UserRole.ADMIN),

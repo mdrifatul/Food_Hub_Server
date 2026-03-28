@@ -7,19 +7,13 @@ import { notFound } from "./middleware/notFound";
 import { categoryRouter } from "./modules/category/category.router";
 import { mealRouter } from "./modules/meals/meal.router";
 import { orderRouter } from "./modules/orders/order.router";
-import { PaymentController } from "./modules/payment/payment.controller";
-import { paymentRouter } from "./modules/payment/payment.router";
 import { providerRouter } from "./modules/provider/provider.router";
 import { ReviewRouter } from "./modules/reivews/review.router";
 import { userRouter } from "./modules/users/user.router";
+import { PaymentController } from "./modules/payment/payment.controller";
+import { paymentRouter } from "./modules/payment/payment.router";
 
 const app: Application = express();
-
-app.post(
-  "/webhook",
-  express.raw({ type: "application/json" }),
-  PaymentController.handleStripeWebhookEvent,
-);
 
 app.use(
   cors({
@@ -27,6 +21,9 @@ app.use(
     credentials: true,
   }),
 );
+
+// Stripe webhook must come BEFORE express.json() — it needs the raw body
+app.post("/webhook", express.raw({ type: "application/json" }), PaymentController.handleStripeWebhookEvent);
 
 app.use(express.json());
 
