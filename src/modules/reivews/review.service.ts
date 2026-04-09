@@ -41,7 +41,25 @@ const getReviewsByMeal = async (mealId: string) => {
   return reviews;
 };
 
+const getAllReviews = async () => {
+  const reviews = await prisma.review.findMany({
+    include: {
+      meal: {
+        select: {
+          title: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return reviews;
+};
+
 export const reviewService = {
   createReview,
   getReviewsByMeal,
+  getAllReviews,
 };

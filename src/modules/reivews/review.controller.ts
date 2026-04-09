@@ -36,7 +36,21 @@ const getReviewsByMeal = async (
   }
 };
 
+const getAllReviews = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await reviewService.getAllReviews();
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const ReviewController = {
   createReview,
   getReviewsByMeal,
+  getAllReviews,
 };

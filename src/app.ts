@@ -4,6 +4,7 @@ import express, { Application } from "express";
 import { auth } from "./lib/auth";
 import globalErrorHandler from "./middleware/globalErrorHandler";
 import { notFound } from "./middleware/notFound";
+import { aiRouter } from "./modules/ai/ai.router";
 import { categoryRouter } from "./modules/category/category.router";
 import { mealRouter } from "./modules/meals/meal.router";
 import { orderRouter } from "./modules/orders/order.router";
@@ -40,6 +41,7 @@ app.use("/api/orders", orderRouter);
 app.use("/api/reviews", ReviewRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/payments", paymentRouter);
+app.use("/api/ai", aiRouter);
 
 app.get("/", (req, res) => {
   res.send("Food Hub API is running");
