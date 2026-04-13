@@ -1,9 +1,11 @@
 # Food Hub API 🍲
 
 A robust, professional-grade backend server for **Food Hub**, a multi-vendor food delivery and management platform. Built with **Node.js**, **TypeScript**, and **Prisma**, this API ensures secure, fast, and scalable operations for users, providers, and administrators.
-
-Frontend Repository: [https://github.com/mdrifatul/Food_Hub_Client]
 ---
+## 🔗 Live URLs
+
+- **Live Application**: [https://foodhub-client-nu.vercel.app]
+- **Frontend Repository**: [https://github.com/mdrifatul/Food_Hub_Client]
 
 ## 🚀 Features
 
