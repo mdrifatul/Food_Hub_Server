@@ -7,7 +7,7 @@ var __export = (target, all) => {
 // src/app.ts
 import { toNodeHandler } from "better-auth/node";
 import cors from "cors";
-import express from "express";
+import express2 from "express";
 
 // src/lib/auth.ts
 import { betterAuth } from "better-auth";
@@ -29,7 +29,7 @@ var config = {
   "clientVersion": "7.3.0",
   "engineVersion": "9d6ad21cbbceab97458517b147a6a09ff43aa735",
   "activeProvider": "postgresql",
-  "inlineSchema": 'model ProviderProfile {\n  id       String @id @default(uuid())\n  authorId String\n\n  businessName    String\n  businessAddress String\n  businessPhone   String\n  description     String?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@map("provider_profiles")\n}\n\nmodel User {\n  id            String    @id\n  name          String\n  email         String\n  emailVerified Boolean   @default(false)\n  image         String?\n  createdAt     DateTime  @default(now())\n  updatedAt     DateTime  @updatedAt\n  sessions      Session[]\n  accounts      Account[]\n\n  role   String? @default("USER")\n  phone  String?\n  status String? @default("ACTIVE")\n\n  @@unique([email])\n  @@map("user")\n}\n\nmodel Session {\n  id        String   @id\n  expiresAt DateTime\n  token     String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  ipAddress String?\n  userAgent String?\n  userId    String\n  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@unique([token])\n  @@index([userId])\n  @@map("session")\n}\n\nmodel Account {\n  id                    String    @id\n  accountId             String\n  providerId            String\n  userId                String\n  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)\n  accessToken           String?\n  refreshToken          String?\n  idToken               String?\n  accessTokenExpiresAt  DateTime?\n  refreshTokenExpiresAt DateTime?\n  scope                 String?\n  password              String?\n  createdAt             DateTime  @default(now())\n  updatedAt             DateTime  @updatedAt\n\n  @@index([userId])\n  @@map("account")\n}\n\nmodel Verification {\n  id         String   @id\n  identifier String\n  value      String\n  expiresAt  DateTime\n  createdAt  DateTime @default(now())\n  updatedAt  DateTime @updatedAt\n\n  @@index([identifier])\n  @@map("verification")\n}\n\nenum UserRole {\n  USER\n  PROVIDER\n  ADMIN\n}\n\nenum UserStatus {\n  ACTIVE\n  INACTIVE\n  SUSPENDED\n  BANNED\n}\n\nmodel Category {\n  id        String   @id @default(uuid())\n  name      String   @unique @db.VarChar(100)\n  slug      String   @unique @db.VarChar(100)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  meals     Meal[]\n\n  @@map("categories")\n}\n\nmodel Meal {\n  id                 String   @id @default(uuid())\n  title              String?  @db.VarChar(255)\n  price              Int\n  authorId           String\n  cuisine            String?\n  dietaryPreferences String[]\n\n  categoryId String?\n  category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)\n\n  imageUrl    String?\n  isAvailable Boolean  @default(true)\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @updatedAt\n\n  orderItem OrderItem[]\n  review    Review[]\n\n  @@index([authorId])\n  @@map("meals")\n}\n\nmodel Order {\n  id String @id @default(uuid())\n\n  authorId        String\n  providerId      String\n  status          OrderStatus   @default(PENDING)\n  paymentMethod   PaymentMethod @default(COD)\n  deliveryAddress String\n\n  totalPrice Int\n\n  // Payment related fields\n  paymentStatus OrderPaymentStatus @default(UNPAID)\n  transactionId String?\n\n  // Relations\n  items   OrderItem[]\n  payment Payment?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@index([authorId])\n  @@map("orders")\n}\n\nmodel OrderItem {\n  id       String @id @default(uuid())\n  orderId  String\n  order    Order  @relation(fields: [orderId], references: [id])\n  mealId   String\n  meal     Meal   @relation(fields: [mealId], references: [id])\n  quantity Int?\n  price    Int\n\n  @@index([orderId])\n  @@index([mealId])\n  @@map("order_items")\n}\n\nenum OrderStatus {\n  PENDING\n  PREPARING\n  READY\n  DELIVERED\n}\n\nenum PaymentMethod {\n  COD\n  STRIPE\n}\n\nenum OrderPaymentStatus {\n  PAID\n  UNPAID\n}\n\nmodel Payment {\n  id      String @id @default(uuid())\n  orderId String @unique\n  order   Order  @relation(fields: [orderId], references: [id])\n\n  amount             Int\n  status             PaymentStatus @default(UNPAID)\n  transactionId      String?\n  paymentGatewayData Json?\n  stripeEventId      String?       @unique\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@map("payments")\n}\n\nenum PaymentStatus {\n  PAID\n  UNPAID\n}\n\nmodel Review {\n  id        String   @id @default(uuid())\n  authorId  String\n  mealId    String\n  meal      Meal     @relation(fields: [mealId], references: [id], onDelete: Cascade)\n  rating    Int\n  comment   String?\n  createdAt DateTime @default(now())\n\n  @@index([mealId])\n  @@index([authorId])\n  @@map("reviews")\n}\n\ngenerator client {\n  provider = "prisma-client"\n  output   = "../../generated/client"\n}\n\ndatasource db {\n  provider = "postgresql"\n}\n',
+  "inlineSchema": 'model ProviderProfile {\n  id       String @id @default(uuid())\n  authorId String\n\n  businessName    String\n  businessAddress String\n  businessPhone   String\n  description     String?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@map("provider_profiles")\n}\n\nmodel User {\n  id            String    @id\n  name          String\n  email         String\n  emailVerified Boolean   @default(false)\n  image         String?\n  createdAt     DateTime  @default(now())\n  updatedAt     DateTime  @updatedAt\n  sessions      Session[]\n  accounts      Account[]\n\n  role   String? @default("USER")\n  phone  String?\n  status String? @default("ACTIVE")\n\n  @@unique([email])\n  @@map("user")\n}\n\nmodel Session {\n  id        String   @id\n  expiresAt DateTime\n  token     String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  ipAddress String?\n  userAgent String?\n  userId    String\n  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@unique([token])\n  @@index([userId])\n  @@map("session")\n}\n\nmodel Account {\n  id                    String    @id\n  accountId             String\n  providerId            String\n  userId                String\n  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)\n  accessToken           String?\n  refreshToken          String?\n  idToken               String?\n  accessTokenExpiresAt  DateTime?\n  refreshTokenExpiresAt DateTime?\n  scope                 String?\n  password              String?\n  createdAt             DateTime  @default(now())\n  updatedAt             DateTime  @updatedAt\n\n  @@index([userId])\n  @@map("account")\n}\n\nmodel Verification {\n  id         String   @id\n  identifier String\n  value      String\n  expiresAt  DateTime\n  createdAt  DateTime @default(now())\n  updatedAt  DateTime @updatedAt\n\n  @@index([identifier])\n  @@map("verification")\n}\n\nenum UserRole {\n  USER\n  PROVIDER\n  ADMIN\n}\n\nenum UserStatus {\n  ACTIVE\n  INACTIVE\n  SUSPENDED\n  BANNED\n}\n\nmodel Category {\n  id        String   @id @default(uuid())\n  name      String   @unique @db.VarChar(100)\n  slug      String   @unique @db.VarChar(100)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  meals     Meal[]\n\n  @@map("categories")\n}\n\nmodel Meal {\n  id                 String   @id @default(uuid())\n  title              String?  @db.VarChar(255)\n  price              Int\n  authorId           String\n  cuisine            String?\n  dietaryPreferences String[]\n\n  categoryId String?\n  category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)\n\n  imageUrl    String?\n  isAvailable Boolean  @default(true)\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @updatedAt\n\n  orderItem OrderItem[]\n  review    Review[]\n\n  @@index([authorId])\n  @@map("meals")\n}\n\nmodel Order {\n  id String @id @default(uuid())\n\n  authorId        String\n  providerId      String\n  status          OrderStatus   @default(PENDING)\n  paymentMethod   PaymentMethod @default(COD)\n  deliveryAddress String\n\n  totalPrice Int\n\n  // Payment related fields\n  paymentStatus OrderPaymentStatus @default(UNPAID)\n  transactionId String?\n\n  // Relations\n  items   OrderItem[]\n  payment Payment?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@index([authorId])\n  @@map("orders")\n}\n\nmodel OrderItem {\n  id       String @id @default(uuid())\n  orderId  String\n  order    Order  @relation(fields: [orderId], references: [id])\n  mealId   String\n  meal     Meal   @relation(fields: [mealId], references: [id])\n  quantity Int?\n  price    Int\n\n  @@index([orderId])\n  @@index([mealId])\n  @@map("order_items")\n}\n\nenum OrderStatus {\n  PENDING\n  PREPARING\n  READY\n  DELIVERED\n}\n\nenum PaymentMethod {\n  COD\n  STRIPE\n}\n\nenum OrderPaymentStatus {\n  PAID\n  UNPAID\n}\n\nmodel Payment {\n  id      String @id @default(uuid())\n  orderId String @unique\n  order   Order  @relation(fields: [orderId], references: [id])\n\n  amount             Int\n  status             PaymentStatus @default(UNPAID)\n  transactionId      String?\n  paymentGatewayData Json?\n  stripeEventId      String?       @unique\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@map("payments")\n}\n\nenum PaymentStatus {\n  PAID\n  UNPAID\n}\n\nmodel Review {\n  id       String  @id @default(uuid())\n  authorId String?\n  mealId   String\n  meal     Meal    @relation(fields: [mealId], references: [id], onDelete: Cascade)\n\n  rating    Int\n  comment   String?\n  createdAt DateTime @default(now())\n\n  @@index([mealId])\n  @@index([authorId])\n  @@map("reviews")\n}\n\ngenerator client {\n  provider = "prisma-client"\n  output   = "../../generated/client"\n}\n\ndatasource db {\n  provider = "postgresql"\n}\n',
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -495,6 +495,252 @@ function notFound(req, res) {
   });
 }
 
+// src/modules/ai/ai.router.ts
+import express from "express";
+
+// src/middleware/checkAuthOptional.ts
+var checkAuthOptional = async (req, res, next) => {
+  try {
+    const session = await auth.api.getSession({
+      headers: req.headers
+    });
+    if (session) {
+      req.user = session.user;
+    }
+  } catch (error) {
+  }
+  next();
+};
+
+// src/modules/ai/ai.service.ts
+var getSearchSuggestions = async (query) => {
+  if (!query || query.length < 1) {
+    return [];
+  }
+  const [meals, categories] = await Promise.all([
+    prisma.meal.findMany({
+      where: {
+        isAvailable: true,
+        OR: [
+          { title: { contains: query, mode: "insensitive" } },
+          { cuisine: { contains: query, mode: "insensitive" } }
+        ]
+      },
+      take: 6,
+      select: { title: true, cuisine: true }
+    }),
+    prisma.category.findMany({
+      where: { name: { contains: query, mode: "insensitive" } },
+      take: 2,
+      select: { name: true }
+    })
+  ]);
+  const suggestions = /* @__PURE__ */ new Set();
+  categories.forEach((cat) => suggestions.add(cat.name));
+  meals.forEach((m) => {
+    if (m.title) suggestions.add(m.title);
+    if (m.cuisine) suggestions.add(m.cuisine);
+  });
+  return Array.from(suggestions).slice(0, 10);
+};
+var getRecommendations = async (userId) => {
+  let recommendedCategoryIds = [];
+  if (userId) {
+    const userOrders = await prisma.order.findMany({
+      where: { authorId: userId },
+      include: {
+        items: {
+          include: {
+            meal: { select: { categoryId: true } }
+          }
+        }
+      },
+      take: 20
+    });
+    if (userOrders.length > 0) {
+      const catIds = userOrders.flatMap(
+        (order) => order.items.map((item) => item.meal.categoryId).filter(Boolean)
+      );
+      recommendedCategoryIds = Array.from(new Set(catIds));
+    }
+  }
+  let trendingMeals = await prisma.meal.findMany({
+    where: { isAvailable: true },
+    orderBy: { createdAt: "desc" },
+    take: 5,
+    include: {
+      category: true
+    }
+  });
+  if (recommendedCategoryIds.length > 0) {
+    const personalized = await prisma.meal.findMany({
+      where: {
+        isAvailable: true,
+        categoryId: { in: recommendedCategoryIds }
+      },
+      orderBy: { createdAt: "desc" },
+      take: 3,
+      include: {
+        category: true
+      }
+    });
+    const combined = [...personalized, ...trendingMeals];
+    const uniqueIds = /* @__PURE__ */ new Set();
+    trendingMeals = combined.filter((m) => {
+      if (!uniqueIds.has(m.id)) {
+        uniqueIds.add(m.id);
+        return true;
+      }
+      return false;
+    }).slice(0, 6);
+  }
+  return trendingMeals;
+};
+var getTrending = async () => {
+  return await prisma.meal.findMany({
+    where: { isAvailable: true },
+    orderBy: { createdAt: "desc" },
+    take: 10,
+    include: {
+      category: true
+    }
+  });
+};
+var chatWithAssistant = async (message) => {
+  const geminiApiKey = process.env.GEMINI_API_KEY;
+  if (!geminiApiKey) {
+    throw new Error(
+      "Gemini API key is missing. Please configure GEMINI_API_KEY in .env file."
+    );
+  }
+  const liveMeals = await prisma.meal.findMany({
+    where: { isAvailable: true },
+    take: 10,
+    select: {
+      title: true,
+      price: true,
+      cuisine: true,
+      dietaryPreferences: true
+    }
+  });
+  const context = JSON.stringify(liveMeals);
+  const systemPrompt = `You are a helpful AI assistant for FoodHub. 
+  Here is some context about our available meals: ${context}.
+  Answer the user's questions about food, meals, pricing, and recommendations. Keep responses concise.`;
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        systemInstruction: {
+          parts: [{ text: systemPrompt }]
+        },
+        contents: [
+          {
+            role: "user",
+            parts: [{ text: message }]
+          }
+        ],
+        generationConfig: {
+          maxOutputTokens: 150,
+          temperature: 0.7
+        }
+      })
+    }
+  );
+  if (!response.ok) {
+    const errText = await response.text();
+    console.error("Gemini Error: ", errText);
+    throw new Error("Failed to communicate with Gemini API");
+  }
+  const data = await response.json();
+  const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't understand that.";
+  return { reply };
+};
+var AIService = {
+  getSearchSuggestions,
+  getRecommendations,
+  getTrending,
+  chatWithAssistant
+};
+
+// src/modules/ai/ai.controller.ts
+var getSearchSuggestions2 = async (req, res, next) => {
+  try {
+    const query = req.query.q;
+    const result = await AIService.getSearchSuggestions(query);
+    res.status(200).json({
+      success: true,
+      message: "AI Search suggestions retrieved successfully",
+      data: result
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+var getRecommendations2 = async (req, res, next) => {
+  try {
+    const userId = req.user?.id;
+    const result = await AIService.getRecommendations(userId);
+    res.status(200).json({
+      success: true,
+      message: "AI Recommendations retrieved successfully",
+      data: result
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+var chatAssistant = async (req, res, next) => {
+  try {
+    const { message } = req.body;
+    if (!message) {
+      return res.status(400).json({ error: "Message is required to chat with AI" });
+    }
+    const result = await AIService.chatWithAssistant(message);
+    res.status(200).json({
+      success: true,
+      message: "Chat successful",
+      data: result
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+var getTrending2 = async (req, res, next) => {
+  try {
+    const result = await AIService.getTrending();
+    res.status(200).json({
+      success: true,
+      message: "AI Trending meals retrieved successfully",
+      data: result
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+var AIController = {
+  getSearchSuggestions: getSearchSuggestions2,
+  getRecommendations: getRecommendations2,
+  getTrending: getTrending2,
+  chatAssistant
+};
+
+// src/modules/ai/ai.router.ts
+var router = express.Router();
+router.get(
+  "/recommendations",
+  checkAuthOptional,
+  AIController.getRecommendations
+);
+router.get("/search-suggestions", AIController.getSearchSuggestions);
+router.get("/trending", AIController.getTrending);
+router.post("/chat", AIController.chatAssistant);
+var aiRouter = router;
+
 // src/modules/category/category.router.ts
 import { Router } from "express";
 
@@ -600,11 +846,11 @@ var auth2 = (...roles) => {
 };
 
 // src/modules/category/category.router.ts
-var router = Router();
-router.post("/", auth2(UserRole.ADMIN), categoryController.createCategory);
-router.get("/", auth2(UserRole.ADMIN, UserRole.PROVIDER, UserRole.USER), categoryController.getAllCategories);
-router.delete("/:id", auth2(UserRole.ADMIN), categoryController.deleteCategory);
-var categoryRouter = router;
+var router2 = Router();
+router2.post("/", auth2(UserRole.ADMIN), categoryController.createCategory);
+router2.get("/", auth2(UserRole.ADMIN, UserRole.PROVIDER, UserRole.USER), categoryController.getAllCategories);
+router2.delete("/:id", auth2(UserRole.ADMIN), categoryController.deleteCategory);
+var categoryRouter = router2;
 
 // src/modules/meals/meal.router.ts
 import { Router as Router2 } from "express";
@@ -810,18 +1056,18 @@ var mealController = {
 };
 
 // src/modules/meals/meal.router.ts
-var router2 = Router2();
-router2.get("/", mealController.getAllMeal);
-router2.get("/:id", mealController.getMealById);
-router2.get(
+var router3 = Router2();
+router3.get("/", mealController.getAllMeal);
+router3.get("/:id", mealController.getMealById);
+router3.get(
   "/provider/my-posts",
   auth2(UserRole.PROVIDER),
   mealController.getMyMeal
 );
-router2.post("/", auth2(UserRole.PROVIDER), mealController.createMeal);
-router2.patch("/:id", auth2(UserRole.PROVIDER), mealController.updateMeal);
-router2.delete("/:id", auth2(UserRole.PROVIDER), mealController.deleteMeal);
-var mealRouter = router2;
+router3.post("/", auth2(UserRole.PROVIDER), mealController.createMeal);
+router3.patch("/:id", auth2(UserRole.PROVIDER), mealController.updateMeal);
+router3.delete("/:id", auth2(UserRole.PROVIDER), mealController.deleteMeal);
+var mealRouter = router3;
 
 // src/modules/orders/order.router.ts
 import { Router as Router3 } from "express";
@@ -1101,34 +1347,34 @@ var orderController = {
 };
 
 // src/modules/orders/order.router.ts
-var router3 = Router3();
-router3.post("/", auth2(UserRole.USER), orderController.createOrder);
-router3.get(
+var router4 = Router3();
+router4.post("/", auth2(UserRole.USER), orderController.createOrder);
+router4.get(
   "/",
   auth2(UserRole.ADMIN, UserRole.PROVIDER, UserRole.USER),
   orderController.getAllOrders
 );
-router3.get(
+router4.get(
   "/myorder",
   auth2(UserRole.ADMIN, UserRole.PROVIDER, UserRole.USER),
   orderController.getUserOrders
 );
-router3.get(
+router4.get(
   "/:orderId",
   auth2(UserRole.USER, UserRole.ADMIN),
   orderController.getPaymentByOrderId
 );
-router3.get(
+router4.get(
   "/:id",
   auth2(UserRole.USER, UserRole.PROVIDER, UserRole.ADMIN),
   orderController.getOrderById
 );
-router3.patch(
+router4.patch(
   "/:id",
   auth2(UserRole.PROVIDER),
   orderController.updateOrderStatus
 );
-var orderRouter = router3;
+var orderRouter = router4;
 
 // src/config/stripe.config.ts
 import Stripe from "stripe";
@@ -1274,13 +1520,13 @@ var PaymentController = {
 
 // src/modules/payment/payment.router.ts
 import { Router as Router4 } from "express";
-var router4 = Router4();
-router4.post(
+var router5 = Router4();
+router5.post(
   "/checkout",
   auth2(UserRole.USER),
   PaymentController.createCheckoutSession
 );
-var paymentRouter = router4;
+var paymentRouter = router5;
 
 // src/modules/provider/provider.router.ts
 import { Router as Router5 } from "express";
@@ -1325,10 +1571,10 @@ var providerController = {
 };
 
 // src/modules/provider/provider.router.ts
-var router5 = Router5();
-router5.post("/", providerController.createProviderProfile);
-router5.get("/:id", providerController.getProviderById);
-var providerRouter = router5;
+var router6 = Router5();
+router6.post("/", providerController.createProviderProfile);
+router6.get("/:id", providerController.getProviderById);
+var providerRouter = router6;
 
 // src/modules/reivews/review.router.ts
 import { Router as Router6 } from "express";
@@ -1366,9 +1612,25 @@ var getReviewsByMeal = async (mealId) => {
   });
   return reviews;
 };
+var getAllReviews = async () => {
+  const reviews = await prisma.review.findMany({
+    include: {
+      meal: {
+        select: {
+          title: true
+        }
+      }
+    },
+    orderBy: {
+      createdAt: "desc"
+    }
+  });
+  return reviews;
+};
 var reviewService = {
   createReview,
-  getReviewsByMeal
+  getReviewsByMeal,
+  getAllReviews
 };
 
 // src/modules/reivews/review.controller.ts
@@ -1396,16 +1658,26 @@ var getReviewsByMeal2 = async (req, res, next) => {
     next(error);
   }
 };
+var getAllReviews2 = async (req, res, next) => {
+  try {
+    const result = await reviewService.getAllReviews();
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 var ReviewController = {
   createReview: createReview2,
-  getReviewsByMeal: getReviewsByMeal2
+  getReviewsByMeal: getReviewsByMeal2,
+  getAllReviews: getAllReviews2
 };
 
 // src/modules/reivews/review.router.ts
-var router6 = Router6();
-router6.post("/", auth2(UserRole.USER), ReviewController.createReview);
-router6.get("/:id", auth2(UserRole.USER), ReviewController.getReviewsByMeal);
-var ReviewRouter = router6;
+var router7 = Router6();
+router7.post("/", auth2(UserRole.USER), ReviewController.createReview);
+router7.get("/", ReviewController.getAllReviews);
+router7.get("/:id", ReviewController.getReviewsByMeal);
+var ReviewRouter = router7;
 
 // src/modules/users/user.router.ts
 import { Router as Router7 } from "express";
@@ -1513,34 +1785,34 @@ var userController = {
 };
 
 // src/modules/users/user.router.ts
-var router7 = Router7();
-router7.get("/", auth2(UserRole.ADMIN), userController.getUser);
-router7.get(
+var router8 = Router7();
+router8.get("/", auth2(UserRole.ADMIN), userController.getUser);
+router8.get(
   "/:id",
   auth2(UserRole.ADMIN, UserRole.PROVIDER, UserRole.USER),
   userController.getUserById
 );
-router7.patch(
+router8.patch(
   "/:id",
   auth2(UserRole.ADMIN, UserRole.PROVIDER, UserRole.USER),
   userController.updateUser
 );
-var userRouter = router7;
+var userRouter = router8;
 
 // src/app.ts
-var app = express();
+var app = express2();
 app.use(
   cors({
-    origin: process.env.APP_URL || "https://foodhub-client-nu.vercel.app",
+    origin: process.env.APP_URL || "https://planova-client.vercel.app",
     credentials: true
   })
 );
 app.post(
   "/webhook",
-  express.raw({ type: "application/json" }),
+  express2.raw({ type: "application/json" }),
   PaymentController.handleStripeWebhookEvent
 );
-app.use(express.json());
+app.use(express2.json());
 app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use("/api/meals", mealRouter);
 app.use("/api/providers", providerRouter);
@@ -1549,6 +1821,7 @@ app.use("/api/orders", orderRouter);
 app.use("/api/reviews", ReviewRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/payments", paymentRouter);
+app.use("/api/ai", aiRouter);
 app.get("/", (req, res) => {
   res.send("Food Hub API is running");
 });
